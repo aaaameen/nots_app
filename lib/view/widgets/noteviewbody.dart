@@ -7,8 +7,21 @@ class noteviewbody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [customappbar(), noteitem()]);
+    return Column(children: [customappbar(), Expanded(child: notelistview())]);
   }
 }
 
+class notelistview extends StatelessWidget {
+  const notelistview({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemBuilder: (context, i) {
+        return noteitem();
+      },
+    );
+  }
+}

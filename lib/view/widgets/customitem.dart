@@ -11,7 +11,7 @@ class noteitem extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
       ),
       padding: EdgeInsets.only(left: 16, top: 24, bottom: 24),
-      margin: EdgeInsets.all(16),
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
