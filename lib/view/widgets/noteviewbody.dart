@@ -9,7 +9,7 @@ class noteviewbody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [customappbar(), Expanded(child: notelistview())]);
+    return Column(children: [customappbar(title: 'Note',iconname: Icons.search,), Expanded(child: notelistview())]);
   }
 }
 
