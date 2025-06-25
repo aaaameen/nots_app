@@ -7,7 +7,8 @@ class NoteView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:noteviewbody()
+      body:noteviewbody(),
+      floatingActionButton: FloatingActionButton(onPressed: (){},child: Icon(Icons.add),),
     );
   }
 }
