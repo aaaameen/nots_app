@@ -1,61 +1,87 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:note_app/constant.dart';
+import 'package:note_app/cubits/addnotecubits/add_note_cubit.dart';
 import 'package:note_app/view/widgets/custombutton.dart';
 import 'package:note_app/view/widgets/customtextfield.dart';
 
 class addnotebuttomsheet extends StatelessWidget {
-  const addnotebuttomsheet({super.key});
+  addnotebuttomsheet({super.key});
+
+ bool isloading = false;
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: SingleChildScrollView(
-        child: addnoteform(),
+        child: BlocConsumer<addNoteCubit, addNoteState>(
+          listener: (context, state) {
+           if(state is addNoteloading){
+             isloading=true;
+           }
+           else if (state is addNotesuccess) {
+
+              Navigator.pop(context);
+              isloading=false;
+            }else if(state is addNotefailure){
+
+             print('failed ${state.errmessage}');
+
+            }
+          },
+          builder: (context, state) {
+            return addnoteform();
+          },
+        ),
       ),
     );
   }
 }
 
 class addnoteform extends StatefulWidget {
-  const addnoteform({
-    super.key,
-  });
+  const addnoteform({super.key});
 
   @override
   State<addnoteform> createState() => _addnoteformState();
 }
 
 class _addnoteformState extends State<addnoteform> {
-
-  final GlobalKey<FormState>formkey=GlobalKey();
-  AutovalidateMode autovalidateMode=AutovalidateMode.disabled;
-  String? title,subtitle;
+  final GlobalKey<FormState> formkey = GlobalKey();
+  AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
+  String? title, subtitle;
   @override
   Widget build(BuildContext context) {
-    return Form(
+    return  Form(
       key: formkey,
       autovalidateMode: autovalidateMode,
       child: Column(
         children: [
-          Customtextfield(title: 'Title',onsave: (value){
-            title=value;
-          },),
+          Customtextfield(
+            title: 'Title',
+            onsave: (value) {
+              title = value;
+            },
+          ),
           SizedBox(height: 30),
-          Customtextfield(title: 'Content',maxlint: 5,onsave: (value){
-            subtitle=value;
-          },),
+          Customtextfield(
+            title: 'Content',
+            maxlint: 5,
+            onsave: (value) {
+              subtitle = value;
+            },
+          ),
           SizedBox(height: 80),
-          Custombutton(title: 'Add Note',onpress: (){
-            if(formkey.currentState!.validate()){
-              formkey.currentState!.save();
-            }else{
-              autovalidateMode=AutovalidateMode.always;
-              setState(() {
-
-              });
-            }
-
-          },),
+          Custombutton(
+            title: 'Add Note',
+            onpress: () {
+              if (formkey.currentState!.validate()) {
+                formkey.currentState!.save();
+              } else {
+                autovalidateMode = AutovalidateMode.always;
+                setState(() {});
+              }
+            },
+          ),
         ],
       ),
     );
