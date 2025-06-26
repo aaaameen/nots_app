@@ -2,36 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:note_app/constant.dart';
 import 'package:note_app/cubits/addnotecubits/add_note_cubit.dart';
+import 'package:note_app/models/note_model.dart';
 import 'package:note_app/view/widgets/custombutton.dart';
 import 'package:note_app/view/widgets/customtextfield.dart';
 
 class addnotebuttomsheet extends StatelessWidget {
   addnotebuttomsheet({super.key});
 
- bool isloading = false;
+  bool isloading = false;
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: SingleChildScrollView(
-        child: BlocConsumer<addNoteCubit, addNoteState>(
-          listener: (context, state) {
-           if(state is addNoteloading){
-             isloading=true;
-           }
-           else if (state is addNotesuccess) {
-
-              Navigator.pop(context);
-              isloading=false;
-            }else if(state is addNotefailure){
-
-             print('failed ${state.errmessage}');
-
-            }
-          },
-          builder: (context, state) {
-            return addnoteform();
-          },
+    return BlocProvider(
+      create: (context)=>addNoteCubit(),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: SingleChildScrollView(
+          child: BlocConsumer<addNoteCubit, addNoteState>(
+            listener: (context, state) {
+              if (state is addNoteloading) {
+                isloading = true;
+              } else if (state is addNotesuccess) {
+                Navigator.pop(context);
+                isloading = false;
+              } else if (state is addNotefailure) {
+                isloading=false;
+                print('failed ${state.errmessage}');
+              }
+            },
+            builder: (context, state) {
+              return isloading?Center(child:CircularProgressIndicator()) : addnoteform();
+            },
+          ),
         ),
       ),
     );
@@ -51,7 +52,7 @@ class _addnoteformState extends State<addnoteform> {
   String? title, subtitle;
   @override
   Widget build(BuildContext context) {
-    return  Form(
+    return Form(
       key: formkey,
       autovalidateMode: autovalidateMode,
       child: Column(
@@ -76,6 +77,13 @@ class _addnoteformState extends State<addnoteform> {
             onpress: () {
               if (formkey.currentState!.validate()) {
                 formkey.currentState!.save();
+                var notemodel = Notemodel(
+                  title: title!,
+                  subtitle: subtitle!,
+                  date: DateTime.now().toString(),
+                  color: Colors.blue.value,
+                );
+                BlocProvider.of<addNoteCubit>(context).addnote(notemodel);
               } else {
                 autovalidateMode = AutovalidateMode.always;
                 setState(() {});
