@@ -7,14 +7,12 @@ void main() {
 
 class Noteapp extends StatelessWidget {
   const Noteapp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
       brightness: Brightness.dark,
-
     ), home: NoteView());
   }
 }
